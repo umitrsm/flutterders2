@@ -4,17 +4,63 @@ import 'package:intl/intl.dart';
 
  class TransactionList extends StatelessWidget {
    final List<Transaction> transactions;
-
-  TransactionList(this.transactions);
+    Function deleteTx;
+  TransactionList(this.transactions,this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
     return Container( 
-      height: 300,
-      child: ListView.builder(
+      height: 320,
+      child: transactions.isEmpty ? Column(children: <Widget>[
+          Text('Henüz İşlem Eklenmedi',
+          style: Theme.of(context).textTheme.title,),
+          SizedBox(//Boşluk Oluşturmak için Kullanılır
+            height: 10,
+          ),
+          Container(
+            height: 200,
+            child:
+            Image.asset('assets/images/ogemi.jpeg',
+            fit: BoxFit.cover,)
+            ,)
+      ],): ListView.builder(
               itemBuilder: (ctx,index) {
-                  return  Card(
-                      color: Colors.limeAccent,
+                  return Card(
+                    margin: EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 18,
+                    ),
+                  child:ListTile(
+                    leading: CircleAvatar(radius: 30,
+                    child:Padding(padding: EdgeInsets.all(6),
+                    child: FittedBox(
+                     child: Text(transactions[index].amount.toStringAsFixed(2) + ' ₺'),),
+                  ),
+                    ),
+                    title: Text(
+                      transactions[index].title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMMd().format(transactions[index].date),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete), 
+                      onPressed:() => deleteTx(transactions[index].id),
+                      color: Theme.of(context).errorColor,),
+                  ),
+                  );
+              },
+                itemCount: transactions.length,
+              
+              ),
+    
+    );
+  }
+}
+/*
+ Card(
+                      //color: Colors.limeAccent,
                       margin: EdgeInsets.symmetric(
                         vertical: 8,
                         horizontal: 5, 
@@ -26,10 +72,12 @@ import 'package:intl/intl.dart';
                         horizontal: 15),
                         decoration: BoxDecoration(border: Border.all(color: Colors.lightGreen)),
                         padding: EdgeInsets.all(10),
-                        child: (Text((transactions[index].amount.toString() + ' ₺'),
+                        child: (Text((transactions[index].amount.toStringAsFixed(2) + ' ₺'),
                         style: TextStyle(fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.deepPurpleAccent),
+                       // color: Colors.deepPurpleAccent
+                        )
+                        ,
                         )
                       ),),
                       Column(
@@ -53,11 +101,4 @@ import 'package:intl/intl.dart';
                       ]),
                   ]) 
                    );
-              },
-                itemCount: transactions.length,
-              
-              ),
-    
-    );
-  }
-}
+ */
